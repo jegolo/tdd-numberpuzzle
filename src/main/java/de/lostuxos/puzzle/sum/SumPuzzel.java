@@ -31,16 +31,17 @@ public class SumPuzzel {
     private void rekuListRun(Map<Character, Integer> numberList, Set<Character> characters, char[] summandA, char[]summandB, char[] summe, Set<Map<Character, Integer>> results) {
         if (allNumbersNotEquals(numberList) && proof(numberList,summandA,summandB,summe)) {
             results.add(numberList);
-            System.out.println(numberList.toString());
             return;
         }
-        //Why...
-        for (Character c: characters) {
-            System.out.println(c + " - " + numberList.get(c));
-            var characters1 = new HashSet<Character>(characters);
-            if (numberList.get(c)<9) {
+
+        var characters1 = new HashSet<Character>(characters);
+        if (!characters1.isEmpty()) {
+            char c = characters1.stream().findFirst().get();
+            characters1.remove(c);
+
+            for (int i=0;i<=9;i++) {
                 var duplicate = new HashMap<>(numberList);
-                duplicate.put(c, duplicate.get(c)+1);
+                duplicate.put(c, i);
                 rekuListRun(duplicate, characters1, summandA, summandB, summe, results);
             }
         }
@@ -58,8 +59,5 @@ public class SumPuzzel {
         var number3 = NumberUtils.convertToNumber(numberList, summe);
         return number1 + number2 == number3;
     }
-
-
-
 
 }

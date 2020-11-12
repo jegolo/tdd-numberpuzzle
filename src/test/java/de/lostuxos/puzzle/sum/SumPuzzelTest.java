@@ -97,4 +97,5 @@ class SumPuzzelTest {
         assertEquals(expected, result);
 
     }
+
 }
