@@ -1,78 +1,65 @@
 package de.lostuxos.puzzle.sum;
 
+import javax.swing.*;
 import java.util.*;
-import java.util.function.IntSupplier;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class SumPuzzel {
 
-    public List<Map<Character, Integer>> solvePuzzle (char[] summandA, char[] summandB, char[] summe) {
+    public Set<Map<Character, Integer>> solvePuzzle (char[] summandA, char[] summandB, char[] summe) {
         Set<Character> allCharacters = NumberUtils.retrieveAllCharacters(summandA, summandB, summe);
 
         // Result
-        List<Map<Character, Integer>> resultList = new ArrayList<>();
+        Set<Map<Character, Integer>> resultList = new HashSet<>();
 
         //We hava only two characters
 
-        char character1 = (char) allCharacters.toArray()[0];
-        char character2 = (char) allCharacters.toArray()[1];
-        for (int character1Value = 0; character1Value < 10; character1Value++) {
-            for (int character2Value = 0; character2Value < 10; character2Value++) {
-                if (character1Value != character2Value) {
-                    var first = character1 == summandA[0] ? character1Value : character2Value;
-                    var second = character1 == summandB[0] ? character1Value : character2Value;
-                    var sum = character1 == summe[0] ? character1Value : character2Value;
+        Map<Character, Integer> numberMap = characterListMap(allCharacters);
 
-                    if (first + second == sum) {
-                        Map<Character, Integer> resultMap = new HashMap<>();
-                        resultMap.put(character1, character1Value);
-                        resultMap.put(character2, character2Value);
-                        resultList.add(resultMap);
-                    }
-
-                }
-            }
-        }
+        rekuListRun(numberMap, allCharacters, summandA, summandB, summe, resultList);
         return  resultList;
     }
 
 
 
-/**
- *     var numberMap = new HashMap<Character, List<Integer>>();
- *         for (Character c : allCharacters) {
- *
- *             List<Integer> values = new ArrayList<>();
- *             for (int i = 0; i<10;i++) {
- *                 values.add(i);
- *             }
- *             numberMap.put(c, values);
- *
- *         }
- */
-    /*
-    // Utility function to swap two characters in a character array
-    private static void swap(int[] ch, int i, int j)
-    {
-        char temp = int[i];
-        ch[i] = ch[j];
-        ch[j] = temp;
+    private Map<Character, Integer> characterListMap(Collection<Character> characters) {
+       return characters.stream().collect(Collectors.toMap(Function.identity(), a -> 0));
     }
 
-    // Recursive function to generate all permutations of a String
-    private static void permutations(char[] ch, int currentIndex)
-    {
-        if (currentIndex == ch.length - 1) {
-            System.out.println(String.valueOf(ch));
+
+    private void rekuListRun(Map<Character, Integer> numberList, Set<Character> characters, char[] summandA, char[]summandB, char[] summe, Set<Map<Character, Integer>> results) {
+        if (allNumbersNotEquals(numberList) && proof(numberList,summandA,summandB,summe)) {
+            results.add(numberList);
+            System.out.println(numberList.toString());
+            return;
+        }
+        //Why...
+        for (Character c: characters) {
+            System.out.println(c + " - " + numberList.get(c));
+            var characters1 = new HashSet<Character>(characters);
+            if (numberList.get(c)<9) {
+                var duplicate = new HashMap<>(numberList);
+                duplicate.put(c, duplicate.get(c)+1);
+                rekuListRun(duplicate, characters1, summandA, summandB, summe, results);
+            }
         }
 
-        for (int i = currentIndex; i < ch.length; i++)
-        {
-            swap(ch, currentIndex, i);
-            permutations(ch, currentIndex + 1);
-            swap(ch, currentIndex, i);
-        }
     }
-    */
+
+    private boolean allNumbersNotEquals(Map<Character, Integer> numberList) {
+        return new HashSet<Integer>(numberList.values()).size() == numberList.size();
+    }
+
+
+    private boolean proof(Map<Character, Integer> numberList, char[] summandA, char[] summandB, char[] summe) {
+        var number1 = NumberUtils.convertToNumber(numberList, summandA);
+        var number2 = NumberUtils.convertToNumber(numberList, summandB);
+        var number3 = NumberUtils.convertToNumber(numberList, summe);
+        return number1 + number2 == number3;
+    }
+
+
+
+
 }

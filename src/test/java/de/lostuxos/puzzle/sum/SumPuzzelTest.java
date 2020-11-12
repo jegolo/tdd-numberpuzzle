@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,7 +27,7 @@ class SumPuzzelTest {
         //Then
 
         //{{'A':'1'},{'B':'2'})..{'A':'4'},{'B':'8'});
-        var expected = new ArrayList<HashMap<Character, Integer>>();
+        var expected = new HashSet<HashMap<Character, Integer>>();
         for (int i=1;i<5;i++) {
             var value = new HashMap<Character, Integer>();
             value.put('A', i);
@@ -53,7 +54,7 @@ class SumPuzzelTest {
         //Then
 
         //{{'A':'1'},{'B':'2'})..{'A':'4'},{'B':'8'});
-        var expected = new ArrayList<HashMap<Character, Integer>>();
+        var expected = new HashSet<HashMap<Character, Integer>>();
         for (int i=1;i<10;i++) {
             var value = new HashMap<Character, Integer>();
             value.put('A', i);
@@ -80,16 +81,20 @@ class SumPuzzelTest {
         //Then
             
         //{{'A':'1'},{'B':'2'})..{'A':'4'},{'B':'8'});
-        var expected = new ArrayList<HashMap<Character, Integer>>();
-        for (int i=1;i<10;i++) {
-            var value = new HashMap<Character, Integer>();
-            value.put('A', i);
-            value.put('B', 0);
-            expected.add(value);
+        var expected = new HashSet<HashMap<Character, Integer>>();
+        for (int a=0;a<10;a++) {
+            for (int b=0;b<10;b++) {
+                if (a!=b && a!=a+b && b!=a+b && a+b < 10) {
+                    var value = new HashMap<Character, Integer>();
+                    value.put('A', a);
+                    value.put('B', b);
+                    value.put('C', a+b);
+                    expected.add(value);
+                }
+            }
         }
 
         assertEquals(expected, result);
 
     }
-
 }

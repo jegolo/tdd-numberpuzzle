@@ -29,5 +29,15 @@ public class NumberUtils {
         var set = IntStream.range(0, summandA.length).mapToObj(i -> summandA[i]).collect(Collectors.toSet());
         return set;
     }
+
+    public static int convertToNumber(Map<Character, Integer> numberList, char[] text) {
+        int result = 0;
+        int decimal=1;
+        for (int i=text.length-1; i>-1; i--) {
+            result = result + numberList.get(text[i]) * decimal;
+            decimal=decimal*10;
+        }
+        return result;
+    }
 }
 

@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,5 +46,23 @@ class NumberUtilsTest {
         var expected = new HashSet<Character>(Arrays.asList('s','e','n','d','m','o','r','y'));
         assertEquals(expected, result);
 
+    }
+
+    @Test
+    void testConvertToNumber() {
+        //Prepare
+
+        //GIVEN
+        char[] text = new char[]{'a','b','c'};
+        Map<Character, Integer> values = new HashMap<>();
+        values.put('a', 1);
+        values.put('b', 2);
+        values.put('c', 3);
+
+        //When
+        int number = NumberUtils.convertToNumber(values, text);
+
+        //Then
+        assertEquals(123, number);
     }
 }
